@@ -41,5 +41,16 @@ here it creates hiiden input field which contains item Id as value and uses chec
 
 
 
+## Something interesting
+
+When you don't have your pc but wants to update anything in your project then go like this
+![image](https://github.com/k1174/To-Do/assets/108426953/2d029b1a-d863-4adf-bcd1-db0135ba0d5b)
+
+>follow steps
+
+![image](https://github.com/k1174/To-Do/assets/108426953/b6845f95-5b68-49ea-aaf3-990ddcfb6ecd)
+
+
+
 
 
