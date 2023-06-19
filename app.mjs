@@ -4,8 +4,11 @@ import path from 'path'
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
+import mongoose from 'mongoose';
+
 //importing our own function
 import date from './date.mjs'
+import { error } from 'console';
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -15,27 +18,87 @@ app.set("view engine", "ejs")//ejs setup
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
+
 //server my public folder having css as static
 app.use(express.static('public'))
 
-let items = []
-let items2 = []
+
+//connect mongoose
+mongoose.connect('mongodb://localhost:27017/todolistDB', { useNewUrlParser: true })//use.. was for depricating warning %% todolistDB is name of db
+
+//schema --- how data to be stored
+const itemSchema = {
+    listItem: String
+}
+
+// model
+const Item = mongoose.model("Item", itemSchema);
+
+//adding items
+const item1 = new Item({
+    listItem: "Welcome to your TodoList"
+})
+const item2 = new Item({
+    listItem: "click '+' to add items"
+})
+const item3 = new Item({
+    listItem: "<---- click to remove items"
+})
+
+//default array
+const defaultItems = [item1, item2, item3]
 
 //getting request from root route
 app.get('/', (req, res) => {
 
-    let day = date()//getting date 
-    res.render("list", { list: day, newItem: items })//now, rendering list.ejs passing day, items array
+    Item.find({})
+        .then((foundItems) => {
+            if (foundItems.length === 0) {
+                Item.insertMany(defaultItems)
+                    .then(() => {
+                        console.log("Successfully added default items to DB")
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
+            }
+            res.render("list", { list: "today", newItem: foundItems })//now, rendering list.ejs passing day, items array
+        })
 })
 
 
-//
+//adding data
 app.post('/', (request, respond) => {
-    let item = request.body.listItem
+    let item = new Item({
+        listItem: request.body.listItem
+    })
+    
 
-    items.push(item)//adding to array
+    //adding to array
+    Item.insertMany(item)
+        .then(() => {
+            console.log("Successfully added")
+            console.log(item._id)
+        })
+        .catch((error) => {
+            console.log(error)
+            console.log(typeof(item))
+        })
     respond.redirect('/')//redirecting to root route so that it updates list
 })
+
+// trying to delete items
+
+// app.get('/delItem',(req,res) =>{
+//     const button = req.body
+//     console.log(button)
+// })
+
+
+
+
+
+
 
 
 app.listen(3000, () => {

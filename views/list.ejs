@@ -15,15 +15,14 @@
     </div>
  
     <div class="box">
-        <% for(let i=0; i < newItem.length; i++ ) { %>
-            
-            <div class="item">
-                <input type="checkbox" >
-                <p ><%= newItem[i] %></p> 
-            </div>
-            
-        <% } %>
         
+        <% newItem.forEach((item)=>{  %>
+            <div class="item">
+                <input type="checkbox" class="task" >
+                <p ><%= item.listItem %></p> 
+            </div>
+        <% }) %> 
+
         <form action="/" method="post" class="item">
             <!-- <label for="">Enter your list</label> -->
             <input type="text" placeholder="Enter " name="listItem">
