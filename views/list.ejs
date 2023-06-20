@@ -11,23 +11,30 @@
 
 <body>
     <div class="box" id="heading">
-        <h1 id="heading"><%= list %></h1>
+        <h1 id="heading">
+            <%= list %>
+        </h1>
     </div>
- 
-    <div class="box">
-        
-        <% newItem.forEach((item)=>{  %>
-            <div class="item">
-                <input type="checkbox" class="task" >
-                <p ><%= item.listItem %></p> 
-            </div>
-        <% }) %> 
 
-        <form action="/" method="post" class="item">
-            <!-- <label for="">Enter your list</label> -->
-            <input type="text" placeholder="Enter " name="listItem">
-            <button type="submit" name="list" value=<%= list %> >+</button>
-        </form>
+    <div class="box">
+
+        <% newItem.forEach((item)=>{ %>
+            <div class="item">
+                <form action="/delItem" method="post">
+                    <input type="hidden" name="itemId" value="<%= item._id %>">
+                    <input type="checkbox" class="task" onclick="this.parentNode.submit()">
+                    <p class="text">
+                        <%= item.listItem %>
+                    </p>
+                </form>
+            </div>
+            <% }) %>
+
+                <form action="/" method="post" class="item">
+                    <!-- <label for="">Enter your list</label> -->
+                    <input type="text" placeholder="Enter " name="listItem">
+                    <button type="submit" name="list" value=<%=list %> >+</button>
+                </form>
 
     </div>
 </body>

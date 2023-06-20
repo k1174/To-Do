@@ -57,12 +57,15 @@ app.get('/', (req, res) => {
                 Item.insertMany(defaultItems)
                     .then(() => {
                         console.log("Successfully added default items to DB")
+                        res.redirect('/')
                     })
                     .catch((error) => {
                         console.log(error)
                     })
             }
-            res.render("list", { list: "today", newItem: foundItems })//now, rendering list.ejs passing day, items array
+            else {
+                res.render("list", { list: "today", newItem: foundItems })//now, rendering list.ejs passing day, items array    
+            }
         })
 })
 
@@ -72,33 +75,42 @@ app.post('/', (request, respond) => {
     let item = new Item({
         listItem: request.body.listItem
     })
-    
+
 
     //adding to array
-    Item.insertMany(item)
+    // Item.insertMany(item)
+    //     .then(() => {
+    //         console.log("Successfully added")
+    //         console.log(item._id)
+    //     })
+    //     .catch((error) => {
+    //         console.log(error)
+    //         console.log(typeof(item))
+    //     })
+
+    item.save()
         .then(() => {
-            console.log("Successfully added")
-            console.log(item._id)
+            console.log("Added sucessfully")
         })
-        .catch((error) => {
-            console.log(error)
-            console.log(typeof(item))
-        })
+
     respond.redirect('/')//redirecting to root route so that it updates list
 })
 
 // trying to delete items
 
-// app.get('/delItem',(req,res) =>{
-//     const button = req.body
-//     console.log(button)
-// })
+app.post('/delItem', async (req, res) => {
+    const button = req.body
 
-
-
-
-
-
+    await Item.deleteOne({ _id: button.itemId })
+        .then(() => {
+            console.log("Deleted successfully.")
+            res.redirect('/')
+        })
+        .catch((err) => {
+            console.log(err)
+            res.status(500).send(err)
+        })
+})
 
 
 app.listen(3000, () => {
